@@ -39,51 +39,6 @@
         <script src="lib/sigma.parsers.json.min.js"></script>
         <script src="SigmaView.js"></script>
         <script type="text/javascript" src="XmlEditor.js"></script>
-        <script>
-
-            function NewNode(nodeList)
-            {
-                var i,
-                s,
-                N = nodeList.length,
-                E = nodeList.length,
-                g = {
-                    nodes: [],
-                    edges: []
-                };
-                // Generate a random graph:
-                for (i = 0; i < N; i++)
-                {
-                    g.nodes.push({
-                        id: nodeList[i].Name,
-                        label: nodeList[i].Name,
-                        x: Math.random(),
-                        y: Math.random(),
-                        size: nodeList[i].References.length + 5,
-                        color: '#5588ff'
-                    });
-
-                    for (j = 1; j < nodeList[i].References.length+1; j++)
-                        g.edges.push({
-                            id: 'e' + nodeList[i].Name+j,
-                            source: nodeList[i].Name,
-                            target: nodeList[i].References[j-1],
-                            size: Math.random(),
-                            color: '#ffffff'
-                        });
-                }
-                //source: 'n' + (Math.random() * N | 0),
-                //target: 'n' + (Math.random() * N | 0),
-                // Instantiate sigma:
-                s = new sigma({
-                    graph: g,
-                    renderer: { container: document.getElementById('ViewContainer'), type: 'canvas' },
-                    settings: { labelColor: 'node', labelSize: 'fixed', labelThreshold: 1 }
-                });
-
-                s.refresh();
-            }
-        </script>
 
 
 
