@@ -57,15 +57,26 @@ _XmlEditor.on("change", function ()
     var SpringNodeList = new Array(0);
     for (var i = 0; i < objectIDs.length; i++)
     {
-        var references = objectIDs[i].getElementsByTagName("ref");
         var referencesNames = new Array(0);
-        for (var j = 0; j < references.length; j++)
+        var o = objectIDs[i];
+
+        var refNames = ParseRefNodes(o);
+        if (refNames.length > 0 && refNames[0] != null)
+            referencesNames = referencesNames.concat(refNames);
+
+        var propRefNames = ParsePropertyNodes(o);
+        if (propRefNames.length > 0 && propRefNames[0] != null)
+            referencesNames = referencesNames.concat(propRefNames);
+
+        var ctorRefNames = ParseCtorNodes(o);
+        if (ctorRefNames.length > 0 && ctorRefNames[0] != null)
+            referencesNames = referencesNames.concat(ctorRefNames);
+
+        if (o.id != "")
         {
-            var refName = references[j].getAttribute("object");
-            referencesNames.push(refName);
+            var SpringNode = { Name: o.id, References: referencesNames };
+            SpringNodeList.push(SpringNode);
         }
-        var SpringNode = { Name: objectIDs[i].id, References: referencesNames };
-        SpringNodeList.push(SpringNode);
     }
 
     NewNode(SpringNodeList);
@@ -73,7 +84,41 @@ _XmlEditor.on("change", function ()
 });
 
 
+function ParseRefNodes(o)
+{
+    var refNames = new Array(0);
+    var references = o.getElementsByTagName("ref");
+    for (var j = 0; j < references.length; j++)
+    {
+        var refName = references[j].getAttribute("object");
+        if (refName != null && refName != "")
+            refNames.push(refName);
+    }
+    return refNames;
+}
 
-            
+
+function ParsePropertyNodes(o)
+{
+    var refNames = new Array(0);
+    var references = o.getElementsByTagName("property");
+    for (var j = 0; j < references.length; j++) {
+        var refName = references[j].getAttribute("ref");
+        if (refName != null && refName != "")
+            refNames.push(refName);
+    }
+    return refNames;
+}
+
+function ParseCtorNodes(o) {
+    var refNames = new Array(0);
+    var references = o.getElementsByTagName("constructor-arg");
+    for (var j = 0; j < references.length; j++) {
+        var refName = references[j].getAttribute("ref");
+        if (refName != null && refName != "")
+            refNames.push(refName);
+    }
+    return refNames;
+}
 
 
