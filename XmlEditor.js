@@ -2,7 +2,7 @@
 var SpringNode ={
         Name: "Node",
         References: new Array(0),
-        Users: new Array(0)
+        NumReferences: 0
         };
 
 
@@ -74,7 +74,7 @@ _XmlEditor.on("change", function ()
 
         if (o.id != "")
         {
-            var SpringNode = { Name: o.id, References: referencesNames };
+            var SpringNode = { Name: o.id, References: referencesNames, NumReferences: referencesNames.length };
             SpringNodeList.push(SpringNode);
         }
     }

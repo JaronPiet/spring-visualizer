@@ -8,36 +8,61 @@ function NewNode(nodeList)
     };
    
     nodeList.sort(SortByRank);
+    var maxReferences = nodeList[0].NumReferences;
+    var graphLevelMatrix = new Array(maxReferences);
 
-    for (i = 0; i < nodeList.length; i++) {
+    for (i = 0; i < nodeList.length; i++)
+    {
+        var node = nodeList[i];
+        if (graphLevelMatrix[node.NumReferences] == null)
+            graphLevelMatrix[node.NumReferences] = new Array();
 
-        var nodeRank = nodeList[i].References.length;
+        graphLevelMatrix[node.NumReferences].push(node);
+    }
 
-        var xPos = nodeRank*20;
-        var yPos = i+50;
+    for (var level = 0; level < maxReferences; level++)
+    {
+        var numLevelNodes = 0;
+        if (graphLevelMatrix[level] != null)
+            numLevelNodes = graphLevelMatrix[level].length;
+        else
+            numLevelNodes = 0;
 
-        g.nodes.push({
-            id: nodeList[i].Name,
-            label: nodeList[i].Name,
-            x: xPos,
-            y: yPos,
-            size: nodeRank + 5,
-            'color': 'rgb('+Math.round(0)+','+
-                            Math.round(xPos*5) + ',' +
-                            Math.round(256)+')'
-        });
+        var xStart = -numLevelNodes / 2;
+        for (i = 0; i < numLevelNodes; i++)
+        {
+            var node = graphLevelMatrix[level][i];
+            var nodeName = node.Name;
 
-        for (j = 0; j < nodeList[i].References.length; j++)
-            g.edges.push({
-                id: 'e' + nodeList[i].Name + j,
-                source: nodeList[i].References[j],
-                target: nodeList[i].Name,
-                size: Math.random(),
+
+            var xPos = xStart+i*nodeName.length * 10;
+            var yPos = level - 10;
+
+            g.nodes.push({
+                id: nodeName,
+                label: nodeName,
+                x: xPos,
+                y: yPos,
+                size: level + 5,
                 'color': 'rgb(' + Math.round(0) + ',' +
-                                  Math.round(xPos * 5) + ',' +
+                                  Math.round(yPos * 5) + ',' +
                                   Math.round(256) + ')'
             });
+
+            for (j = 0; j < node.NumReferences; j++)
+                g.edges.push({
+                    id: 'e' + nodeName + j,
+                    source: node.References[j],
+                    target: nodeName,
+                    size: Math.random(),
+                    'color': 'rgb(' + Math.round(0) + ',' +
+                                      Math.round(yPos * 5) + ',' +
+                                      Math.round(256) + ')'
+                });
+        }
     }
+
+
 
     // Instantiate sigma:
     s = new sigma({
@@ -52,7 +77,7 @@ function NewNode(nodeList)
 
 function SortByRank(a, b)
 {
-    if (a.References.length <= b.References.length)
+    if (a.NumReferences <= b.NumReferences)
         return 1;
     else
         return -1;
