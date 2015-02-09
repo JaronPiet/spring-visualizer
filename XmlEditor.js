@@ -1,14 +1,13 @@
+/* 
+    Creates a CodeMirror-Editor and set the XML-Mode
+    Files can be uploaded.
 
-var SpringNode ={
-        Name: "Node",
-        References: new Array(0),
-        NumReferences: 0
-        };
+    Any change of the content calls the ConfigParser to update the graph.
+*/
 
-
-var _XmlEditor = CodeMirror.fromTextArea(document.getElementById("SpringEditor"),
+var XmlEditor = CodeMirror.fromTextArea(document.getElementById("SpringEditor"),
                     {
-                        mode: "application/xml",
+                        mode: "xml",
                         lineNumbers: true
                     });
             
@@ -22,7 +21,7 @@ window.onload = function ()
     fileInput.addEventListener('change', function (e)
     {
         var file = fileInput.files[0];
-        var textType = "application/xml";
+        var textType = "xml";
 
 
         if (file.type.match(textType))
@@ -36,7 +35,7 @@ window.onload = function ()
 
             reader.onloadend = function (e)
             {
-                _XmlEditor.setValue(reader.result);
+                XmlEditor.setValue(reader.result);
             }
   
             reader.readAsText(file);
@@ -48,77 +47,12 @@ window.onload = function ()
     });
 }
 
-_XmlEditor.on("change", function ()
+XmlEditor.on("change", function ()
 {
-    var parser = new DOMParser();
-    var xmlDoc = parser.parseFromString(_XmlEditor.getValue(), "application/xml");
-
-    var objectIDs = xmlDoc.getElementsByTagName("object");
-    var SpringNodeList = new Array(0);
-    for (var i = 0; i < objectIDs.length; i++)
-    {
-        var referencesNames = new Array(0);
-        var o = objectIDs[i];
-
-        var refNames = ParseRefNodes(o);
-        if (refNames.length > 0 && refNames[0] != null)
-            referencesNames = referencesNames.concat(refNames);
-
-        var propRefNames = ParsePropertyNodes(o);
-        if (propRefNames.length > 0 && propRefNames[0] != null)
-            referencesNames = referencesNames.concat(propRefNames);
-
-        var ctorRefNames = ParseCtorNodes(o);
-        if (ctorRefNames.length > 0 && ctorRefNames[0] != null)
-            referencesNames = referencesNames.concat(ctorRefNames);
-
-        if (o.id != "")
-        {
-            var SpringNode = { Name: o.id, References: referencesNames, NumReferences: referencesNames.length };
-            SpringNodeList.push(SpringNode);
-        }
-    }
-
-    NewNode(SpringNodeList);
-
+    ParseConfig(XmlEditor.getValue());
 });
 
 
-function ParseRefNodes(o)
-{
-    var refNames = new Array(0);
-    var references = o.getElementsByTagName("ref");
-    for (var j = 0; j < references.length; j++)
-    {
-        var refName = references[j].getAttribute("object");
-        if (refName != null && refName != "")
-            refNames.push(refName);
-    }
-    return refNames;
-}
 
-
-function ParsePropertyNodes(o)
-{
-    var refNames = new Array(0);
-    var references = o.getElementsByTagName("property");
-    for (var j = 0; j < references.length; j++) {
-        var refName = references[j].getAttribute("ref");
-        if (refName != null && refName != "")
-            refNames.push(refName);
-    }
-    return refNames;
-}
-
-function ParseCtorNodes(o) {
-    var refNames = new Array(0);
-    var references = o.getElementsByTagName("constructor-arg");
-    for (var j = 0; j < references.length; j++) {
-        var refName = references[j].getAttribute("ref");
-        if (refName != null && refName != "")
-            refNames.push(refName);
-    }
-    return refNames;
-}
 
 
