@@ -1,11 +1,12 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
-VisualStudioVersion = 12.0.21005.1
+# Visual Studio Express 2013 for Web
+VisualStudioVersion = 12.0.31101.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{A7BE292A-AA57-4F51-B27A-DE97316A0447}"
 	ProjectSection(SolutionItems) = preProject
-		3DView.js = 3DView.js
+		ConfigParser.js = ConfigParser.js
+		layout\SigmaRefTreeLayout.js = layout\SigmaRefTreeLayout.js
 		SigmaView.js = SigmaView.js
 		SpringVisualizer.html = SpringVisualizer.html
 		XmlEditor.js = XmlEditor.js

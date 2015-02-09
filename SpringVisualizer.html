@@ -6,7 +6,8 @@
     <meta charset="utf-8" />
     <meta name="viewcontainer" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
     <style type="text/css">
-        #ViewContainer {
+        #ViewContainer 
+        {
             height: 800px;
             margin: auto;
         }
@@ -25,11 +26,13 @@
 
         <h1>Application Visualizer</h1>
         <div id="ViewContainer" style="background-color: #000055"></div>
+        <br/>
 
-        <br />
-        <div>Spring configuration file (xml): <input type="file" id="fileInput"></div>
-        <pre id="fileDisplayArea"></pre>
-
+        <div>
+            Spring configuration file (xml): <input type="file" id="fileInput">
+            <pre id="fileDisplayArea"></pre>
+        </div>
+        
         <label>Editor</label>
         <textarea id="SpringEditor" rows="190" cols="90"></textarea>
 
@@ -37,10 +40,10 @@
         <script src="lib/sigma.min.js"></script>
         <script src="lib/plugins/sigma.plugins.animate/sigma.plugins.animate.js"></script>
         <script src="lib/sigma.parsers.json.min.js"></script>
+        <script src="layout/SigmaRefTreeLayout.js"></script>
         <script src="SigmaView.js"></script>
+        <script src="ConfigParser.js"></script>
         <script type="text/javascript" src="XmlEditor.js"></script>
-
-
 
     </form>
     
