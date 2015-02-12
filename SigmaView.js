@@ -39,6 +39,7 @@ function InitNeighboorHood(s)
     s.graph.nodes().forEach(function (n)
     {
         n.originalColor = n.color;
+        n.originalSize = n.size;
     });
 
     s.graph.edges().forEach(function (e)
@@ -54,10 +55,15 @@ function InitNeighboorHood(s)
 
         s.graph.nodes().forEach(function (n)
         {
-            if (toKeep[n.id])
+            if (toKeep[n.id]) {
                 n.color = '#FF0000';
+                n.size = 20;
+            }
             else
+            {
                 n.color = '#eee';
+                n.size = 2;
+            }
         });
 
         s.graph.edges().forEach(function (e)
@@ -76,6 +82,7 @@ function InitNeighboorHood(s)
         s.graph.nodes().forEach(function (n)
         {
             n.color = n.originalColor;
+            n.size = n.originalSize;
         });
 
         s.graph.edges().forEach(function (e)
