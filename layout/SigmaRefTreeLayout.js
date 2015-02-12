@@ -47,7 +47,9 @@ function CreateGraph(nodeList)
                     id: 'e' + nodeName + j,
                     source: node.References[j],
                     target: nodeName,
-                    size: 1,
+                    type: "arrow",
+                    arrow: "target",
+                    size: 50,
                     'color': 'rgb(' + Math.round((level + 1) * levelColorStep) + ',' +
                                       Math.round((level + 1) * levelColorStep) + ',' +
                                       Math.round(256) + ')'
