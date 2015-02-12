@@ -47,7 +47,7 @@ function CreateGraph(nodeList)
                     id: 'e' + nodeName + j,
                     source: node.References[j],
                     target: nodeName,
-                    size: 0.1,
+                    size: 1,
                     'color': 'rgb(' + Math.round((level + 1) * levelColorStep) + ',' +
                                       Math.round((level + 1) * levelColorStep) + ',' +
                                       Math.round(256) + ')'
@@ -97,3 +97,5 @@ function SortByInfluence(a, b)
     else
         return -1;
 }
+
+
