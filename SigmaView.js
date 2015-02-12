@@ -17,7 +17,6 @@ function RefreshGraph(graph)
     });
 
     InitNeighboorHood(s);
-
 }
 
 sigma.classes.graph.addMethod('neighbors', function (nodeId)
@@ -35,7 +34,7 @@ sigma.classes.graph.addMethod('neighbors', function (nodeId)
 
 function InitNeighboorHood(s)
 {
-
+    var backColor = document.getElementById('ViewContainer').style.backgroundColor;
     s.graph.nodes().forEach(function (n)
     {
         n.originalColor = n.color;
@@ -55,23 +54,19 @@ function InitNeighboorHood(s)
 
         s.graph.nodes().forEach(function (n)
         {
-            if (toKeep[n.id]) {
-                n.color = '#FF0000';
-                n.size = 20;
-            }
+            if (toKeep[n.id]) 
+                n.size = 5;
             else
             {
-                n.color = '#eee';
+                n.color = "rgba(0, 0, 0, 0)";
                 n.size = 2;
             }
         });
 
         s.graph.edges().forEach(function (e)
         {
-            if (toKeep[e.source] && toKeep[e.target])
-                e.color = '#FF0000';
-            else
-                e.color = '#eee';
+            if (!toKeep[e.source] || !toKeep[e.target])
+                e.color = "rgba(0, 0, 0, 0)";
         });
 
         s.refresh();
