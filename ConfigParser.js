@@ -4,12 +4,20 @@
     ParseConfig creates a list of nodes and passing them to the viewer function.
 */
 
-var SpringNode =
-    {
-        Name: "Node",
-        References: new Array(0),
-        NumReferences: 0
-    };
+function SpringNode(id, name)
+{
+    this.id = id;
+    this.Name = name;
+    this.References = new Array(0);
+    this.Targets = new Array(0);
+    this.x0 = 0;
+    this.y0 = 0;
+    this.x = 0;
+    this.y = 0;
+
+    this.NumReferences = function() {return this.References.length;}
+    this.NumTargets = function() { return this.Targets.length;}
+}
 
 var JAVA_LANG =
     {
@@ -21,9 +29,10 @@ var DOTNET_LANG =
         NodeTerm: "object"
     };
 
+
 var LangSetup = DOTNET_LANG;
 var XmlDoc;
-
+var SpringNodeList;
 
 //ParserInterface candidate
 function ParseConfig(xml)
@@ -31,83 +40,11 @@ function ParseConfig(xml)
     var parser = new DOMParser();
     XmlDoc = parser.parseFromString(xml, "text/xml");
 
+    SpringNodeList = new Array(0);
+
     LanguageDetection();
     Parse();
 }
-
-function Parse()
-{
-    var objectIDs = XmlDoc.getElementsByTagName(LangSetup.NodeTerm);
-    var SpringNodeList = new Array(0);
-    for (var i = 0; i < objectIDs.length; i++)
-    {
-        var referencesNames = new Array(0);
-        var o = objectIDs[i];
-
-        var refNames = ParseRefNodes(o);
-        if (refNames.length > 0 && refNames[0] != null)
-            referencesNames = referencesNames.concat(refNames);
-
-        var propRefNames = ParsePropertyNodes(o);
-        if (propRefNames.length > 0 && propRefNames[0] != null)
-            referencesNames = referencesNames.concat(propRefNames);
-
-        var ctorRefNames = ParseCtorNodes(o);
-        if (ctorRefNames.length > 0 && ctorRefNames[0] != null)
-            referencesNames = referencesNames.concat(ctorRefNames);
-
-        if (o.id != "")
-        {
-            var SpringNode = { Name: o.id, References: referencesNames, NumReferences: referencesNames.length };
-            SpringNodeList.push(SpringNode);
-        }
-    }
-
-    UpdateView(SpringNodeList);
-}
-
-
-
-function ParseRefNodes(o)
-{
-    var refNames = new Array(0);
-    var references = o.getElementsByTagName("ref");
-    for (var j = 0; j < references.length; j++)
-    {
-        var refName = references[j].getAttribute(LangSetup.NodeTerm);
-        if (refName != null && refName != "")
-            refNames.push(refName);
-    }
-    return refNames;
-}
-
-
-function ParsePropertyNodes(o)
-{
-    var refNames = new Array(0);
-    var references = o.getElementsByTagName("property");
-    for (var j = 0; j < references.length; j++)
-    {
-        var refName = references[j].getAttribute("ref");
-        if (refName != null && refName != "")
-            refNames.push(refName);
-    }
-    return refNames;
-}
-
-function ParseCtorNodes(o)
-{
-    var refNames = new Array(0);
-    var references = o.getElementsByTagName("constructor-arg");
-    for (var j = 0; j < references.length; j++)
-    {
-        var refName = references[j].getAttribute("ref");
-        if (refName != null && refName != "")
-            refNames.push(refName);
-    }
-    return refNames;
-}
-
 
 function LanguageDetection()
 {
@@ -120,5 +57,113 @@ function LanguageDetection()
     }
     catch (e)
     {
+        Debug.writeln("Spring Config-Language unsupported!");
     }
 }
+
+
+function Parse()
+{
+    var objectIDs = XmlDoc.getElementsByTagName(LangSetup.NodeTerm);
+
+    for (var i = 0; i < objectIDs.length; i++)
+    {
+        var o = objectIDs[i];
+        if (o.id != "")
+        {
+            var snode = new SpringNode(i, o.id);
+            SpringNodeList.push(snode);
+        }
+    }
+
+    for (var i = 0; i < objectIDs.length; i++)
+    {
+        var o = objectIDs[i];
+        if (o.id != "")
+        {
+            ParseRefNodes(o);
+            ParsePropertyNodes(o);
+            ParseCtorNodes(o);
+        }
+    }
+
+    UpdateView(SpringNodeList);
+}
+
+function ParseRefNodes(o)
+{
+    var targetNode = FindName(SpringNodeList, o.id);
+    if (targetNode != null)
+    {
+        var references = o.getElementsByTagName("ref");
+        for (var j = 0; j < references.length; j++)
+        {
+            var refName = references[j].getAttribute(LangSetup.NodeTerm);
+            if (refName != null && refName != "")
+            {
+                var refNode = FindName(SpringNodeList, refName);
+                if (refNode != null)
+                {
+                    refNode.Targets.push(targetNode);
+                    targetNode.References.push(refNode);
+                }
+            }
+        }
+    }
+}
+
+function ParsePropertyNodes(o)
+{
+    var targetNode = FindName(SpringNodeList, o.id);
+    if (targetNode != null)
+    {
+        var references = o.getElementsByTagName("property");
+        for (var j = 0; j < references.length; j++)
+        {
+            var refName = references[j].getAttribute("ref");
+            if (refName != null && refName != "")
+            {
+                var refNode = FindName(SpringNodeList, refName);
+                if (refNode != null)
+                {
+                    refNode.Targets.push(targetNode);
+                    targetNode.References.push(refNode);
+                }
+            }
+        }
+    }
+}
+
+function ParseCtorNodes(o)
+{
+    var targetNode = FindName(SpringNodeList, o.id);
+    if (targetNode != null)
+    {
+        var references = o.getElementsByTagName("constructor-arg");
+        for (var j = 0; j < references.length; j++)
+        {
+            var refName = references[j].getAttribute("ref");
+            if (refName != null && refName != "")
+            {
+                var refNode = FindName(SpringNodeList, refName);
+                if (refNode != null)
+                {
+                    refNode.Targets.push(targetNode);
+                    targetNode.References.push(refNode);
+                }
+            }
+        }
+    }
+}
+
+function FindName(array, name)
+{
+    for (var i = 0; i < array.length; i++)
+    {
+        if (array[i].Name == name)
+            return array[i];
+    }
+    return null;
+}
+
+
