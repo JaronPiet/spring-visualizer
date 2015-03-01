@@ -10,7 +10,7 @@ function CreateGraph(nodeList)
 
     nodeList.sort(SortByInfluence);
 
-    var maxReferences = nodeList[0].NumReferences + 1;
+    var maxReferences = nodeList[0].NumReferences() + 1;
     var levelColorStep = 256 / maxReferences;
 
 
@@ -42,10 +42,10 @@ function CreateGraph(nodeList)
                                   Math.round((level + 1) * levelColorStep) + ')'
             });
 
-            for (j = 0; j < node.NumReferences; j++)
+            for (j = 0; j < node.NumReferences(); j++)
                 g.edges.push({
                     id: 'e' + nodeName + j,
-                    source: node.References[j],
+                    source: node.References[j].Name,
                     target: nodeName,
                     type: "arrow",
                     arrow: "target",
@@ -67,10 +67,10 @@ function CreateGraphLevelMatrix(nodeList, maxReferences)
     for (i = 0; i < nodeList.length; i++)
     {
         var node = nodeList[i];
-        if (graphLevelMatrix[node.NumReferences] == null)
-            graphLevelMatrix[node.NumReferences] = new Array();
+        if (graphLevelMatrix[node.NumReferences()] == null)
+            graphLevelMatrix[node.NumReferences()] = new Array();
 
-        graphLevelMatrix[node.NumReferences].push(node);
+        graphLevelMatrix[node.NumReferences()].push(node);
     }
 
     return graphLevelMatrix;
@@ -94,7 +94,7 @@ function CalculateNodeXStep(numLevelNodes)
 
 function SortByInfluence(a, b)
 {
-    if (a.NumReferences <= b.NumReferences)
+    if (a.NumReferences() <= b.NumReferences())
         return 1;
     else
         return -1;
