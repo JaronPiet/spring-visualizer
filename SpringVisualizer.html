@@ -14,18 +14,17 @@
     </style>
 </head>
 <body>
-    <script src="lib/codemirror.js"></script>
-    <link rel=stylesheet href="lib/docs.css">
-    <link rel="stylesheet" href="lib/codemirror.css">
-    <script src="mode/xml/xml.js"></script>
-    <script src="lib/three.min.js"></script>
-    <script src="lib/three.js"></script>
+    <script src="lib/codemirror/codemirror.js"></script>
+    <link rel=stylesheet href="lib/codemirror/docs.css">
+    <link rel="stylesheet" href="lib/codemirror/codemirror.css">
+    <script src="lib/codemirror/mode/xml/xml.js"></script>
     <style type="text/css">.CodeMirror { border-top: 1px solid black; border-bottom: 1px solid black;}  </style>
 
     <form>
 
         <h1>Application Visualizer</h1>
-        <div id="ViewContainer" style="background-color: #000055"></div>
+        <!--<div id="ViewContainer" style="background-color: #000055"></div>-->
+        <div id="ViewContainer" style="background-color: #FFFFFF"></div>
         <br/>
 
         <div>
@@ -37,14 +36,16 @@
         <textarea id="SpringEditor" rows="190" cols="90"></textarea>
 
 
-        <script src="lib/sigma.min.js"></script>
-        <script src="lib/plugins/sigma.renderers.customShapes.js"></script>
-        <script src="lib/sigma.parsers.json.min.js"></script>
+        <!--<script src="lib/sigma/sigma.min.js"></script>
+        <script src="lib/sigma/plugins/sigma.renderers.customShapes.js"></script>
+        <script src="lib/sigma/sigma.parsers.json.min.js"></script>
         <script src="layout/SigmaRefTreeLayout.js"></script>
-        <script src="SigmaView.js"></script>
+        <script src="SigmaView.js"></script>-->
+        <script src="lib/d3/d3.min.js"></script>
+        <script src="D3View.js"></script>
         <script src="ConfigParser.js"></script>
         <script type="text/javascript" src="XmlEditor.js"></script>
-
+        
     </form>
     
 </body>

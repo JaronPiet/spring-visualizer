@@ -6,6 +6,7 @@ MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{A7BE292A-AA57-4F51-B27A-DE97316A0447}"
 	ProjectSection(SolutionItems) = preProject
 		ConfigParser.js = ConfigParser.js
+		D3View.js = D3View.js
 		layout\SigmaRefTreeLayout.js = layout\SigmaRefTreeLayout.js
 		SigmaView.js = SigmaView.js
 		SpringVisualizer.html = SpringVisualizer.html
